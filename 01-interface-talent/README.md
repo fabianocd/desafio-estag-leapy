@@ -1,90 +1,53 @@
-# Desafio 01 — Interface de Talentos
+# 🚀 Desafio Técnico - Leapy - Interface Talent
 
-Construa uma interface com lista de talentos, filtros e paginação usando os dados do Postgres/Directus deste projeto (bônus por usar Next.js).
+## 🧠 Descrição
+Implementação do modelo de dados do desafio **Interface Talent** usando **PostgreSQL** e **Directus**, com dockerização completa e relacionamentos entre as tabelas.
 
-Você deve fornecer instruções claras de como rodar o projeto (back + front). Sem essas instruções, o projeto não será avaliado.
+## 🧩 Estrutura do Projeto
+- `internship_leaders`: cadastro dos líderes de estágio  
+- `talents`: cadastro de talentos vinculados a líderes e cargos  
+- `target_roles`: cargos almejados pelos talentos  
 
-## Objetivo
+## 🔗 Relacionamentos criados
+- `talents.leader_id → internship_leaders.id` → **SET NULL**
+- `talents.target_role_id → target_roles.id` → **SET NULL**
+- `target_roles.talent_id → talents.id` → **CASCADE**
 
-- Listagem de talentos com:
-  - Barra de busca por `directus_users.email` (via join com `talents.user_id -> directus_users.id`)
-  - Filtros (quanto mais, melhor pontuação):
-    - `department`, `current_status`, `pdi_plan_ready`, `orchestrator_state`
-    - intervalo `start_date`/`end_date`
-    - `leader_id`, `target_role_id`
-  - Ordenação: por `date_updated` (desc) e opcionalmente outras
-  - Paginação server-side
-- Exibir contagem de resultados, estado de carregamento e erros
-- Responsividade e acessibilidade
+## ⚙️ Como executar o projeto
 
-## Stack
-
-- Backend de dados: Postgres + Directus (fornecidos via docker-compose)
-- Frontend: livre (bônus: Next.js + TypeScript)
-- Integração: usar API REST/GraphQL do Directus ou um BFF (ex.: Next.js Route Handlers)
-
-## Como rodar localmente
-
-1. Pré-requisitos: Docker e Docker Compose
-2. Copie o env exemplo e ajuste portas/credenciais se necessário:
-
+### 1. Subir containers
 ```bash
-cp directus/.env.example directus/.env
-```
+docker-compose up -d
 
-3. Suba os serviços:
+## 📸 Evidências
 
-```bash
-docker compose -f directus/docker-compose.yml up -d --build
-```
+### 1️⃣ Data Model
+Demonstração das coleções criadas no Directus (`internship_leaders`, `talents`, `target_roles`).
 
-4. Aguarde o Directus iniciar. O `schema.sql` e `seed.sql` serão aplicados automaticamente (ver compose).
-5. Use os exemplos em `api/rest.http` para testar endpoints/filters.
+![Data Model](./screenshots/1-data-model.png)
 
-## Esquema e Dados
+---
 
-- Os schemas reais estão em `directus/seed/schema.sql`:
-  - `public.talents`
-  - `public.internship_leaders`
-  - `public.target_roles`
-  - (o Directus provisiona `directus_users`)
-- Os dados fictícios devem ser gerados em `directus/seed/seed.sql` (~100 talentos, com relacionamentos válidos).
+### 2️⃣ Relacionamento Leader → Talents
+Mostra o relacionamento configurado entre as coleções `internship_leaders` e `talents`, com a opção **“Nullify the leader_id field”**.
 
-Observação: candidatos que não usarem Directus devem criar uma tabela de usuários compatível com o campo de busca por email (join por `user_id`).
+![Leader Relationship](./screenshots/2-relationship-leader.png)
 
-## Directus — Dicas e Referências
+---
 
-- Documentação oficial: [Directus Documentation](https://directus.io/docs/)
-- API: consulte os endpoints REST/GraphQL e autenticação (tokens) na doc.
-- Busca por email: é comum expor o relacionamento com usuários via `fields=*,user_id.email`.
-- CORS/ENV: ajuste `PUBLIC_URL`, tokens e origens conforme seu frontend.
+### 3️⃣ Relacionamento Target Role → Talents
+Mostra o relacionamento configurado entre `target_roles` e `talents`, com **delete em cascata (ON DELETE CASCADE)**.
 
-## Extensions Customizadas (Opcional)
+![Target Role Relationship](./screenshots/3-relationship-talent.png)
 
-Você pode estender o Directus criando extensions customizadas no diretório `directus/extensions/`.
+---
 
-### Tipos de Extensions Disponíveis
+### 4️⃣ Teste no Content
+Demonstração da tela de conteúdo (`Content`) mostrando as coleções disponíveis e prontas para receber dados.
 
-- **API Endpoints**: [criar rotas API customizadas](https://directus.io/docs/guides/extensions/api-extensions/endpoints)
-- **Event Hooks**: [executar código durante eventos](https://directus.io/docs/guides/extensions/api-extensions/hooks)
-- **Bundles**: [agrupar múltiplas extensions](https://directus.io/docs/guides/extensions/bundles)
+![Content Test](./screenshots/4-content-test.png)
 
-Consulte `directus/extensions/README.md` para instruções detalhadas sobre como criar e desenvolver extensions.
+---
 
-**Nota**: Extensions são opcionais mas são valorizadas na avaliação, especialmente para cenários que requerem lógica de backend customizada além da API padrão do Directus.
-
-## Requisitos Técnicos
-
-- Debounce na busca, paginação server-side, evitar N+1
-- Tratamento de erros e estados vazios
-- Qualidade de código, organização e documentação
-- CORS e ENV configurados corretamente para integração frontend-backend
-
-## Entrega
-
-- Código + README com instruções claras de setup (back + front), variáveis de ambiente e scripts. Sem essas instruções, o projeto não será avaliado
-- Abra um PR com descrição das decisões, trade-offs e, se possível, screenshots/GIFs
-
-## Exemplos de Endpoints
-
-Consulte `api/rest.http` para exemplos de filtros, paginação e join para buscar por email.
+✅ **Status Final:**  
+Todas as tabelas criadas, relacionamentos configurados e interface do Directus operacional.
